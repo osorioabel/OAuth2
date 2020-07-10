@@ -152,7 +152,11 @@ open class OAuth2Authorizer: OAuth2AuthorizerUI {
 		return (authenticationSession as! ASWebAuthenticationSession).start()
 #else
 		if #available(iOS 12, *) {
-			authenticationSession = ASWebAuthenticationSession(url: url, callbackURLScheme: redirect, completionHandler: completionHandler)
+			let session = ASWebAuthenticationSession(url: url, callbackURLScheme: redirect, completionHandler: completionHandler)
+			if #available(iOS 13, *) {
+				session.prefersEphemeralWebBrowserSession = true
+			}
+			authenticationSession = session
 			return (authenticationSession as! ASWebAuthenticationSession).start()
 		} else {
 			authenticationSession = SFAuthenticationSession(url: url, callbackURLScheme: redirect, completionHandler: completionHandler)
